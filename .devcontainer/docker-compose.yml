@@ -1,0 +1,45 @@
+name: wordpress-portifolio
+
+services:
+
+  wordpress:
+    container_name: wordpress-portifolio
+    build: ./
+    ports:
+      - 3000:80
+      - 9003:9003
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress-portifolio
+      WORDPRESS_DB_PASSWORD: wordpress-portifolio
+      WORDPRESS_DB_NAME: wordpress-portifolio
+    volumes:
+      - ../wordpress:/var/www/html
+      - ./php.ini:/usr/local/etc/php/conf.d/custom-php.ini
+    networks:
+      - wordpress-portifolio
+
+  db:
+    container_name: wordpress-portifolio-db
+    image: mysql:8.3
+    environment:
+      MYSQL_DATABASE: wordpress-portifolio
+      MYSQL_USER: wordpress-portifolio
+      MYSQL_PASSWORD: wordpress-portifolio
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    ports:
+      - 3307:3306
+      - 33070:33060
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - wordpress-portifolio
+
+volumes:
+  db:
+    name: wordpress-portifolio-db
+
+networks:
+  wordpress-portifolio:
+    name: wordpress-portifolio
+    driver: bridge
